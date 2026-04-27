@@ -13,7 +13,7 @@ I wanted to build something that handles actual business logic and state changes
 
 ## Tech Stack
 
-* **Frontend:** Angular (using modern Standalone Components and `signal()` for reactive state management), plain HTML/CSS for a clean, custom UI.
+* **Frontend:** Angular (using modern Standalone Components and `signal()` for reactive state management), plain HTML/CSS for UI.
 * **Backend:** Java and Spring Boot (Spring Web, Spring Data JPA).
 * **Database:** H2 In-Memory Database. I chose this because it's completely zero-setup. It wipes clean on every restart, making it perfect for quick testing without needing to spin up a Docker container or local SQL server.
 
