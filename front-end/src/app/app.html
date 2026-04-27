@@ -1,0 +1,105 @@
+<nav class="navbar">
+  <div class="nav-content">
+    <div class="brand">
+      <span class="logo-text">DispatchPro</span>
+    </div>
+    <span class="app-title">{{ title() }}</span>
+  </div>
+</nav>
+
+<main class="dashboard-container">
+
+  <section class="create-section">
+    <div class="section-header">
+      <h2>Create New Ticket</h2>
+      <p>Submit an issue to the dispatch queue.</p>
+    </div>
+
+    <div class="form-card">
+      <div class="input-group">
+        <label>Ticket Title</label>
+        <input type="text" #titleInput class="form-input" placeholder="e.g., Server down in Zone A">
+      </div>
+
+      <div class="input-group">
+        <label>Description</label>
+        <textarea #descInput class="form-input" rows="3" placeholder="Provide detailed information about the issue..."></textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="input-group" style="flex: 1;">
+          <label>Priority Level</label>
+          <select #priorityInput class="form-input">
+            <option value="LOW">🟢 Low Priority</option>
+            <option value="MEDIUM">🟡 Medium Priority</option>
+            <option value="HIGH">🔴 High Priority</option>
+          </select>
+        </div>
+
+        <button class="btn btn-primary" (click)="createNewTicket(titleInput.value, descInput.value, priorityInput.value); titleInput.value=''; descInput.value='';">
+          Submit Ticket
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <section class="queue-section">
+    <div class="section-header queue-header">
+      <h2>Active Queue</h2>
+      <span class="ticket-count">{{ incidents().length }} Total</span>
+    </div>
+
+    <div class="ticket-grid">
+      @for (ticket of incidents(); track ticket.id) {
+
+        <div class="ticket-card status-{{ ticket.status }}">
+
+          <div class="ticket-header">
+            <span class="ticket-id">#{{ ticket.id }}</span>
+            <span class="status-badge badge-{{ ticket.status }}">{{ ticket.status }}</span>
+          </div>
+
+          <h3 class="ticket-title">{{ ticket.title }}</h3>
+          <p class="ticket-desc">{{ ticket.description }}</p>
+
+          <div class="ticket-meta">
+            <span class="meta-item">
+              <strong>Priority:</strong> {{ ticket.priority }}
+            </span>
+            @if (ticket.solverId) {
+              <span class="meta-item solver-badge">
+                Dispatcher #{{ ticket.solverId }}
+              </span>
+            }
+          </div>
+
+          @if (ticket.status === 'OPEN' || ticket.status === 'IN_PROGRESS') {
+            <div class="ticket-actions">
+              <input type="number" #solverIdInput class="form-input action-input" placeholder="Your ID (e.g. 999)">
+
+              @if (ticket.status === 'OPEN') {
+                <button class="btn btn-take" (click)="takeTicket(ticket.id, solverIdInput.value)">
+                  Take Ticket
+                </button>
+              }
+
+              @if (ticket.status === 'IN_PROGRESS') {
+                <button class="btn btn-solve" (click)="solveTicket(ticket.id, solverIdInput.value)">
+                  Mark Solved
+                </button>
+              }
+            </div>
+          }
+        </div>
+
+      } @empty {
+        <div class="empty-state">
+          <div class="empty-icon">🎉</div>
+          <h3>All caught up!</h3>
+          <p>The ticket queue is completely empty right now.</p>
+        </div>
+      }
+    </div>
+  </section>
+
+</main>
